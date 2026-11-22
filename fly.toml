@@ -10,7 +10,7 @@ primary_region = 'fra'
   dockerfile = 'deploy/Dockerfile'
 
   [build.args]
-    NEXT_PUBLIC_TURNSTILE_SITE_KEY = '<turnstile-site-key>'
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY = '0x4AAAAAAF2zDklO-sc4qkV-'
 
 [env]
   DEMO_ENABLED = 'true'
