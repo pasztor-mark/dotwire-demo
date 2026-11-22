@@ -1,0 +1,8 @@
+#!/command/with-contenv sh
+exec /command/s6-setuidgid postgres /usr/lib/postgresql/17/bin/postgres -D /var/lib/dw/pg \
+  -c listen_addresses=127.0.0.1 \
+  -c shared_buffers=64MB \
+  -c max_connections=40 \
+  -c work_mem=4MB \
+  -c shared_preload_libraries=timescaledb \
+  -c timescaledb.telemetry_level=off

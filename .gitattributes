@@ -1,0 +1,2 @@
+# Shell scripts, s6 definitions and configs run inside a Linux image — keep LF on Windows checkouts.
+deploy/** text eol=lf

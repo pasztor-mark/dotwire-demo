@@ -1,0 +1,3 @@
+#!/bin/sh
+# Any service exit stops the container; Fly restarts the Machine and the rootfs wipes.
+exec /run/s6/basedir/bin/halt

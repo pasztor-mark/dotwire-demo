@@ -1,0 +1,61 @@
+{
+	admin off
+	auto_https off
+}
+
+# The only non-loopback listener in the Machine. Fly terminates TLS in front of it.
+:8000 {
+	# One route block so evaluation order is exactly as written.
+	route {
+		# Boot progress for the loading page; written by /etc/dw-boot/status.sh.
+		handle /__status {
+			header Cache-Control "no-store"
+			root * /run/dw
+			rewrite * /status.json
+			file_server
+		}
+
+		# dotwire calls this over loopback, straight to :3000. Never reachable from outside.
+		handle /api/hooks/presend* {
+			respond 404
+		}
+
+		handle /api/otlp* {
+			respond 404
+		}
+
+		# Until the boot script touches /run/dw/ready: pages get the loading page (HTTP 200, so
+		# link-preview crawlers that woke the Machine still get proper meta tags), everything else 503.
+		# "Page" is decided by method and path, not Accept: preview bots often send */* or no Accept.
+		@notready not file {
+			root /run/dw
+			try_files /ready
+		}
+		handle @notready {
+			@page {
+				method GET HEAD
+				not path /api/* /dw/* /_next/* /__status
+				not header Connection *Upgrade*
+			}
+			handle @page {
+				header Cache-Control "no-store"
+				root * /srv
+				rewrite * /loading.html
+				file_server
+			}
+			handle {
+				header Retry-After "2"
+				respond 503
+			}
+		}
+
+		# dotwire gateway: SignalR hub + REST. handle_path strips /dw, so it sees /hub/rooms etc.
+		handle_path /dw/* {
+			reverse_proxy 127.0.0.1:8080
+		}
+
+		handle {
+			reverse_proxy 127.0.0.1:3000
+		}
+	}
+}

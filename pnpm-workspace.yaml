@@ -1,0 +1,7 @@
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@dotwire/client@0.3.0'
+  - '@dotwire/host@0.3.0'
+  - '@dotwire/react@0.3.0'

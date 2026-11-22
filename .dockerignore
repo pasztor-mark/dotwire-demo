@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.superpowers
+.env*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+fly.toml

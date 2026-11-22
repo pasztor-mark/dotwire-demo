@@ -1,0 +1,30 @@
+#!/command/with-contenv sh
+# dotwire configuration (spec §12). PG_*, DW_* and WEBHOOK_SECRET come from /etc/dw-boot/init.sh.
+pg="Host=127.0.0.1;Port=5432;Database=dotwire"
+export ASPNETCORE_URLS=http://127.0.0.1:8080
+# Workstation GC: server GC reserves far more memory than a 1 GB Machine shared by four runtimes can spare.
+export DOTNET_gcServer=0
+export Dotwire__Role=All
+export ConnectionStrings__PostgresMigrator="$pg;Username=dotwire;Password=$PG_OWNER_PASSWORD"
+export ConnectionStrings__PostgresWrite="$pg;Username=dotwire_app;Password=$PG_APP_PASSWORD"
+export ConnectionStrings__PostgresRead="$pg;Username=dotwire_app;Password=$PG_APP_PASSWORD"
+export Postgres__AppRolePassword="$PG_APP_PASSWORD"
+export Dotwire__Encryption__ActiveKeyId=k1
+export Dotwire__Encryption__Keys__k1="$DW_ENC_KEY"
+export Nats__Url=nats://127.0.0.1:4222
+export Auth__Issuer=dw-demo
+export Auth__Audience=dotwire
+export Auth__Keys__demo="$DW_JWT_PUBLIC_PEM"
+export Dotwire__Webhooks__Presend__Url=http://127.0.0.1:3000/api/hooks/presend
+export Dotwire__Webhooks__Presend__TimeoutMs=500
+export Dotwire__Webhooks__Presend__FailPolicy=Closed
+export Dotwire__Webhooks__Presend__IncludeAdminSends=false
+export Dotwire__Webhooks__Secret="$WEBHOOK_SECRET"
+export Dotwire__Sse__Enabled=false
+export Dotwire__RateLimits__Send__PermitLimit=5
+export Dotwire__RateLimits__Send__TokensPerPeriod=1
+export Dotwire__RateLimits__Send__PeriodSeconds=2
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:3000/api/otlp
+export OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+export OTEL_METRIC_EXPORT_INTERVAL=5000
+exec /command/s6-setuidgid app /usr/local/bin/dotwire
