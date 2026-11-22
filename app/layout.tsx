@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 };
 
 const PORTFOLIO_URL = "https://www.pasztormark.dev";
+const DOCS_URL = "https://dotwire.pasztormark.dev";
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -52,6 +53,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <Link href="/" className="nav-link">
                   rooms
                 </Link>
+                <a href={DOCS_URL} className="nav-link text-muted">
+                  docs ↗
+                </a>
                 <a href={PORTFOLIO_URL} className="nav-link text-muted">
                   portfolio ↗
                 </a>
@@ -65,6 +69,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <a href={PORTFOLIO_URL} className="chip-link px-[18px] py-[9px] text-base font-semibold">
                 by márk pásztor
               </a>
+              <Link href="/privacy" className="chip-link px-[18px] py-[9px] text-base font-semibold">
+                privacy
+              </Link>
+              <Link href="/terms" className="chip-link px-[18px] py-[9px] text-base font-semibold">
+                terms
+              </Link>
             </div>
             <small className="italic">ps: wanna hire me? send me a message through the contact form on my <a target="_blank" className="underline text-accent" href="https://pasztormark.dev">portfolio</a></small>
           </footer>

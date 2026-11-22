@@ -27,6 +27,8 @@ export async function POST(req: Request) {
   if (form === "trap") return json(200, {});
   if (form === "expired") return fail(409, "form_expired", "This form expired, reload the page.");
 
+  if (body.acceptedTerms !== true) return fail(400, "terms_required", "Please accept the terms and privacy policy.");
+
   const token = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
   if (!token || !(await verifyTurnstile(token, ip))) {
     return fail(403, "turnstile_failed", "Verification failed, please try again.");

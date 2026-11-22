@@ -26,6 +26,7 @@ export function EnterForm({ ts, siteKey }: { ts: string; siteKey: string }) {
   const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<{ message: string; expired: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [accepted, setAccepted] = useState(false);
 
   function renderWidget() {
     if (!window.turnstile || !widgetEl.current) return;
@@ -42,11 +43,12 @@ export function EnterForm({ ts, siteKey }: { ts: string; siteKey: string }) {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!token) return;
+    if (!token || !accepted) return;
     setBusy(true);
     setError(null);
     const res = await postJson<{ username?: string }>("/api/session", {
       turnstileToken: token,
+      acceptedTerms: accepted,
       ...guardFields(e.currentTarget, ts),
     });
     setBusy(false);
@@ -66,8 +68,27 @@ export function EnterForm({ ts, siteKey }: { ts: string; siteKey: string }) {
         onReady={renderWidget}
       />
       <Honeypot />
+      <label className="flex items-start gap-3 text-ink2">
+        <input
+          type="checkbox"
+          checked={accepted}
+          onChange={(e) => setAccepted(e.target.checked)}
+          className="mt-1 size-4 shrink-0"
+        />
+        <span>
+          I have read and agree to the{" "}
+          <a href="/terms" target="_blank" rel="noopener" className="underline text-accent">
+            terms of use
+          </a>{" "}
+          and{" "}
+          <a href="/privacy" target="_blank" rel="noopener" className="underline text-accent">
+            privacy policy
+          </a>
+          .
+        </span>
+      </label>
       <div ref={widgetEl} className="min-h-[65px]" />
-      <button type="submit" disabled={!token || busy} className="btn-accent">
+      <button type="submit" disabled={!token || !accepted || busy} className="btn-accent">
         {busy ? "Entering…" : "Enter the demo →"}
       </button>
       <FormError error={error} />
