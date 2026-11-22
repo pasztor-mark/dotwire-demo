@@ -79,4 +79,4 @@ ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
     PATH=/usr/lib/postgresql/17/bin:$PATH
 
 EXPOSE 8000
-ENTRYPOINT ["/init"]
+ENTRYPOINT ["unshare", "--pid", "--fork", "--mount-proc", "/init"]
