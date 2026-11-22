@@ -1,34 +1,33 @@
-# Fly config for the dw-demo Machine (spec §12).
-app = "dw-demo"            # rename if taken
-primary_region = "fra"
+# fly.toml app configuration file generated for dotwire-demo on 2026-11-22T18:21:20Z
+#
+# See https://docs.fly.io/reference/configuration for information about how to use this file.
+#
+
+app = 'dotwire-demo'
+primary_region = 'fra'
 
 [build]
-  dockerfile = "deploy/Dockerfile"
+  dockerfile = 'deploy/Dockerfile'
 
-[build.args]
-  # Public site key (it ships to every browser anyway). The secret key is a Fly secret:
-  #   fly secrets set TURNSTILE_SECRET_KEY=...
-  NEXT_PUBLIC_TURNSTILE_SITE_KEY = "<turnstile-site-key>"
+  [build.args]
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY = '<turnstile-site-key>'
 
 [env]
-  # Must equal the hostname Turnstile reports; change with a custom domain.
-  PUBLIC_HOST = "dw-demo.fly.dev"
-  # Anything but "true" serves only the project landing page; Turnstile keys are then unused.
-  DEMO_ENABLED = "true"
+  DEMO_ENABLED = 'true'
+  PUBLIC_HOST = 'dw-demo.fly.dev'
 
-# Deploy with `fly deploy --ha=false`; keep exactly one Machine (`fly scale count 1`) — two would
-# split in-memory state. No [mounts]: the rootfs is ephemeral on purpose, that's the data wipe.
 [http_service]
   internal_port = 8000
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
+
   [http_service.concurrency]
-    type = "connections"
-    soft_limit = 200
+    type = 'connections'
     hard_limit = 250
+    soft_limit = 200
 
 [[vm]]
-  size = "shared-cpu-1x"
-  memory = "1gb"
+  size = 'shared-cpu-1x'
+  memory = '1gb'
