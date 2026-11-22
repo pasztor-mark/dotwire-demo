@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { guardFields, postJson } from "@/lib/clientApi";
 import { FormError } from "./FormError";
 import { Honeypot } from "./Honeypot";
@@ -10,6 +10,16 @@ export function JoinRoomForm({ ts, onSessionLost }: { ts: string; onSessionLost:
   const router = useRouter();
   const [error, setError] = useState<{ message: string; expired: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
+  const codeInput = useRef<HTMLInputElement>(null);
+  const joinButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const match = /^#join=([A-Za-z0-9-]{1,11})$/.exec(window.location.hash);
+    if (!match || !codeInput.current) return;
+    codeInput.current.value = match[1];
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+    joinButton.current?.focus();
+  }, []);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,6 +45,7 @@ export function JoinRoomForm({ ts, onSessionLost }: { ts: string; onSessionLost:
       <div className="flex gap-2">
         <input
           id="invite-code"
+          ref={codeInput}
           name="code"
           required
           maxLength={11}
@@ -43,7 +54,7 @@ export function JoinRoomForm({ ts, onSessionLost }: { ts: string; onSessionLost:
           spellCheck={false}
           className="field min-w-0 flex-1 font-mono uppercase"
         />
-        <button type="submit" disabled={busy} className="btn-light">
+        <button type="submit" ref={joinButton} disabled={busy} className="btn-light">
           Join
         </button>
       </div>
