@@ -14,7 +14,7 @@ primary_region = 'fra'
 
 [env]
   DEMO_ENABLED = 'true'
-  PUBLIC_HOST = 'dw-demo.fly.dev'
+  PUBLIC_HOST = 'demo.dotwire.pasztormark.dev'
 
 [http_service]
   internal_port = 8000
