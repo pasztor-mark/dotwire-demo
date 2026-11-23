@@ -1,8 +1,8 @@
 // Every numeric limit in one place (spec §7–§10). The README's "Limits" section mirrors this file.
 
 export const CAPS = {
-  MAX_USERS: 500,
-  MAX_ROOMS: 200,
+  MAX_USERS: 3000,
+  MAX_ROOMS: 1000,
   MAX_ROOMS_PER_USER: 3,
   MAX_MEMBERS_PER_ROOM: 20,
   MAX_MESSAGE_LEN: 500,

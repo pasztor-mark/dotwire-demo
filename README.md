@@ -92,8 +92,8 @@ code is the only way in.
 
 | Limit | Value |
 |---|---|
-| Users per boot | 500 |
-| Rooms in total | 200 |
+| Users per boot | 3000 |
+| Rooms in total | 1000 |
 | Rooms per user | 3 |
 | Members per room | 20 |
 | Message length | 500 characters |
